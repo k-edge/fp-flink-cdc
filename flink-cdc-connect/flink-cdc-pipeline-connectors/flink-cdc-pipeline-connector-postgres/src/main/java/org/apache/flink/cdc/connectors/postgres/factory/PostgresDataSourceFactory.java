@@ -177,7 +177,7 @@ public class PostgresDataSourceFactory implements DataSourceFactory {
                         .assignUnboundedChunkFirst(isAssignUnboundedChunkFirst)
                         .includeDatabaseInTableId(tableIdIncludeDatabase)
                         .includeSchemaChanges(includeSchemaChanges)
-                        .scanNewlyAddedTableEnabled(scanNewlyAddedTableEnabled)
+                        //.scanNewlyAddedTableEnabled(scanNewlyAddedTableEnabled)
                         .getConfigFactory();
 
         List<TableId> tableIds = PostgresSchemaUtils.listTables(configFactory.create(0), null);
