@@ -285,13 +285,13 @@ public class PostgresDataSourceOptions {
     @Experimental
     public static final ConfigOption<Boolean> SCAN_NEWLY_ADDED_TABLE_ENABLED =
             ConfigOptions.key("scan.newly-added-table.enabled")
-            .booleanType()
-            .defaultValue(false)
-            .withDescription(
-                "Whether to scan the newly added tables or not, by default is false. "
-                + "This option is only useful when we start the job from a "
-                + "savepoint/checkpoint: on restore the enumerator re-lists "
-                + "tables matching the 'tables' pattern, diffs against the "
-                + "saved state, and schedules snapshot splits for the newly "
-                + "discovered tables followed by WAL streaming.");
+                    .booleanType()
+                    .defaultValue(false)
+                    .withDescription(
+                            "Whether to scan the newly added tables or not, by default is false. "
+                                    + "This option is only useful when we start the job from a "
+                                    + "savepoint/checkpoint: on restore the enumerator re-lists "
+                                    + "tables matching the 'tables' pattern, diffs against the "
+                                    + "saved state, and schedules snapshot splits for the newly "
+                                    + "discovered tables followed by WAL streaming.");
 }
