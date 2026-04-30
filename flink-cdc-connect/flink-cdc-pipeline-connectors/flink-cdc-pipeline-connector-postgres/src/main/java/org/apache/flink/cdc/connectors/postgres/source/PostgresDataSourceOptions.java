@@ -282,6 +282,23 @@ public class PostgresDataSourceOptions {
                     .withDescription(
                             "Whether to infer CDC column types when processing pgoutput Relation messages.");
 
+    // ----------------------------------------------------------------------------
+    // Newly-added-table discovery option (ported from the MySQL pipeline connector,
+    // apache/flink-cdc PR #3560 / FLINK-36115). On Postgres this has two additional
+    // prerequisites that the MySQL equivalent does not:
+    //   1. The replication slot ({@link #SLOT_NAME}) MUST already have the new table
+    //      in scope, which for pgoutput means the publication must include it. Use
+    //      publication.autocreate.mode=all_tables (FOR ALL TABLES) or run
+    //      `ALTER PUBLICATION ... ADD TABLE` before inserting into the new table,
+    //      otherwise the WAL carries no changes for it.
+    //   2. Only one consumer per replication slot is allowed, so this option works
+    //      on the existing pipeline rather than by spinning up a second job.
+    // The MySQL-style scan.binlog.newly-added-table.enabled is intentionally NOT
+    // ported: Postgres has no global change log; WAL events for new tables only
+    // flow if the publication includes them, which Debezium does not refresh
+    // mid-stream. Use scan.newly-added-table.enabled with a savepoint restart
+    // instead.
+    // ----------------------------------------------------------------------------
     @Experimental
     public static final ConfigOption<Boolean> SCAN_NEWLY_ADDED_TABLE_ENABLED =
             ConfigOptions.key("scan.newly-added-table.enabled")
