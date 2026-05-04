@@ -180,6 +180,13 @@ public class PostgresDataSourceFactory implements DataSourceFactory {
                         .scanNewlyAddedTableEnabled(scanNewlyAddedTableEnabled)
                         .getConfigFactory();
 
+        // Resolve the 'tables' regex against current tables and freeze the list.
+        // With scan.newly-added-table.enabled=true this is still the right shape —
+        // cdc-base's SnapshotSplitAssigner.captureNewlyAddedTables re-discovers
+        // tables on enumerator re-open (i.e. savepoint restore) by calling
+        // dialect.discoverDataCollections using the same filter, so the user
+        // restarts the job (with an updated 'tables' pattern if needed) and new
+        // tables get a snapshot split followed by WAL streaming.
         List<TableId> tableIds = PostgresSchemaUtils.listTables(configFactory.create(0), null);
 
         Selectors selectors = new Selectors.SelectorsBuilder().includeTables(tables).build();
